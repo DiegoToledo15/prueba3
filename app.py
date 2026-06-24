@@ -63,7 +63,7 @@ def buscar_invitados_por_nombre():
 
 
 def buscar_invitados_por_correo():
-    dominio = input("Ingrese el correo: ").strip()
+    dominio = input("Ingrese correo o dominio a buscar: ").strip()
 
     if dominio == "":
         print("Debe ingresar un correo para buscar.")
