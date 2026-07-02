@@ -10,16 +10,32 @@ eventos = db["eventos"]
 invitados = db["invitados"]
 
 
+def linea():
+    print("-" * 50)
+
+
+def titulo(texto):
+    print("\n" + "=" * 50)
+    print(texto)
+    print("=" * 50)
+
+
+def pausar():
+    input("\nPresione Enter para volver al menu...")
+
+
 def mostrar_invitado(invitado):
+    linea()
     print(f"RUT: {invitado.get('rut', '')}")
     print(f"Nombre: {invitado.get('nombre', '')}")
     print(f"Correo: {invitado.get('correo', '')}")
     print(f"Empresa: {invitado.get('empresa', '')}")
     print(f"Estado: {invitado.get('estado', '')}")
-    print("-" * 40)
 
 
 def listar_eventos():
+    titulo("LISTADO DE EVENTOS")
+
     # Mostramos un listado basico de eventos
     resultados = eventos.find(
         {},
@@ -29,18 +45,22 @@ def listar_eventos():
     encontrados = False
     for evento in resultados:
         encontrados = True
+        linea()
         print(f"Codigo: {evento.get('codigo', '')}")
         print(f"Nombre: {evento.get('nombre', '')}")
         print(f"Fecha: {evento.get('fecha', '')}")
         print(f"Lugar: {evento.get('lugar', '')}")
         print(f"Categoria: {evento.get('categoria', '')}")
-        print("-" * 40)
 
     if not encontrados:
         print("No hay eventos registrados.")
 
+    linea()
+
 
 def buscar_invitados_por_nombre():
+    titulo("BUSCAR INVITADOS POR NOMBRE")
+
     texto = input("Ingrese parte del nombre: ").strip()
 
     if texto == "":
@@ -61,8 +81,13 @@ def buscar_invitados_por_nombre():
     if not encontrados:
         print("No se encontraron invitados con ese nombre.")
 
+    if encontrados:
+        linea()
+
 
 def buscar_invitados_por_correo():
+    titulo("BUSCAR INVITADOS POR CORREO")
+
     dominio = input("Ingrese correo o dominio a buscar: ").strip()
 
     if dominio == "":
@@ -83,8 +108,13 @@ def buscar_invitados_por_correo():
     if not encontrados:
         print("No se encontraron invitados con ese correo o dominio.")
 
+    if encontrados:
+        linea()
+
 
 def validar_acceso():
+    titulo("VALIDAR ACCESO A EVENTO")
+
     rut = input("Ingrese RUT del invitado: ").strip()
     codigo_evento = input("Ingrese codigo del evento: ").strip()
 
@@ -120,6 +150,8 @@ def validar_acceso():
 
 
 def top_3_eventos():
+    titulo("TOP 3 EVENTOS CON MAS CONFIRMADOS")
+
     # Usamos aggregate para contar invitados confirmados
     pipeline = [
         {"$unwind": "$invitados"},
@@ -142,16 +174,20 @@ def top_3_eventos():
     encontrados = False
     for evento in resultados:
         encontrados = True
+        linea()
         print(f"Codigo: {evento['_id'].get('codigo', '')}")
         print(f"Nombre: {evento['_id'].get('nombre', '')}")
         print(f"Invitados confirmados: {evento.get('total_confirmados', 0)}")
-        print("-" * 40)
 
     if not encontrados:
         print("No hay eventos con invitados confirmados.")
 
+    linea()
+
 
 def invitados_confirmados_con_lookup():
+    titulo("INVITADOS CONFIRMADOS POR EVENTO")
+
     codigo_evento = input("Ingrese codigo del evento: ").strip()
 
     # Usamos lookup para unir eventos con invitados por el campo rut
@@ -188,6 +224,7 @@ def invitados_confirmados_con_lookup():
     encontrados = False
     for persona in resultados:
         encontrados = True
+        linea()
         print(f"Evento: {persona.get('evento', '')}")
         print(f"Codigo: {persona.get('codigo', '')}")
         print(f"RUT: {persona.get('rut', '')}")
@@ -196,15 +233,16 @@ def invitados_confirmados_con_lookup():
         print(f"Empresa: {persona.get('empresa', '')}")
         print(f"Estado invitado: {persona.get('estado_invitado', '')}")
         print(f"Estado en evento: {persona.get('estado_evento', '')}")
-        print("-" * 40)
 
     if not encontrados:
         print("No se encontraron invitados confirmados para ese evento.")
 
+    linea()
+
 
 def menu():
     while True:
-        print("\n--- MENU GESTOR DE EVENTOS ---")
+        titulo("MENU GESTOR DE EVENTOS")
         print("1. Listar eventos")
         print("2. Buscar invitados por nombre")
         print("3. Buscar invitados por dominio de correo")
@@ -217,21 +255,28 @@ def menu():
 
         if opcion == "1":
             listar_eventos()
+            pausar()
         elif opcion == "2":
             buscar_invitados_por_nombre()
+            pausar()
         elif opcion == "3":
             buscar_invitados_por_correo()
+            pausar()
         elif opcion == "4":
             validar_acceso()
+            pausar()
         elif opcion == "5":
             top_3_eventos()
+            pausar()
         elif opcion == "6":
             invitados_confirmados_con_lookup()
+            pausar()
         elif opcion == "7":
             print("Programa finalizado.")
             break
         else:
             print("Opcion invalida")
+            pausar()
 
 
 menu()
